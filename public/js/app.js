@@ -49371,6 +49371,56 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 var app = new Vue({
   el: '#app'
 });
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+$(document).on('submit', 'form#linkForm', function (e) {
+  var $t = $(this),
+      target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
+  $.ajax({
+    type: "POST",
+    url: "/links",
+    data: $('form#linkForm').serialize(),
+    success: function success(msg) {
+      $('form#linkForm #form-errors').html('');
+      $('form#linkForm #form-success').addClass('alert');
+      $('form#linkForm #form-success').html('Redirect link was saved!');
+      var str = '';
+      str += '<li data-id="' + msg.id + '">';
+      str += '<p class="mb-0">' + msg.old_slug + ' -> ' + msg.slug + '</p>';
+      str += '<button type="button" class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#exampleModal">';
+      str += 'Edit';
+      str += '</button>';
+      str += '<button type="button" class="btn btn-sm btn-danger deleteLink">';
+      str += 'Delete';
+      str += '</button>';
+      str += '</li>';
+      $('#links-list').append(str);
+      setTimeout(function () {
+        $('#exampleModal').modal('hide');
+        $(target).find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
+        $('form#linkForm #form-success').removeClass('alert');
+        $('form#linkForm #form-success').html('');
+      }, 600);
+    },
+    error: function error(data) {
+      var errors = data.responseJSON;
+      console.log(errors);
+      errorsHtml = '<div class="alert alert-danger"><ul>';
+      $.each(errors.errors, function (key, value) {
+        errorsHtml += '<li>' + value[0] + '</li>';
+      });
+      errorsHtml += '</ul></div>';
+      $('form#linkForm #form-errors').html(errorsHtml);
+    }
+  });
+  return false;
+});
+$(document).on('click', '.deleteLink', function () {
+  console.log($(this).parent('li').data('id'));
+});
 
 /***/ }),
 
