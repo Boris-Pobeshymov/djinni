@@ -37,36 +37,51 @@ $.ajaxSetup({
     }
 });
 
-$(document).on('submit', 'form#linkForm', function(e){
+$(document).on('click', '.newLink', function(){
+    $('#link').val('');
+    $('#slug').val('');
+});
+
+$(document).on('submit', '#createModal form#linkForm', function(e){
     var $t = $(this),
         target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
+
     $.ajax({
         type: "POST",
         url: "/links",
-        data: $('form#linkForm').serialize(),
+        data: $('#createModal form#linkForm').serialize(),
         success: function(msg){
 
-            $( 'form#linkForm #form-errors' ).html( '' );
-            $( 'form#linkForm #form-success' ).addClass( 'alert' );
-            $( 'form#linkForm #form-success' ).html( 'Redirect link was saved!' );
+            $( '#createModal form#linkForm #form-errors' ).html( '' );
+            $( '#createModal form#linkForm #form-success' ).addClass( 'alert' );
+            $( '#createModal form#linkForm #form-success' ).html( 'Redirect link was saved!' );
 
 
             var str = '';
-            str += '<li data-id="' + msg.id + '">';
-            str += '<p class="mb-0">' + msg.old_slug + ' -> ' + msg.slug +'</p>';
-            str += '<button type="button" class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#exampleModal">';
+            str += '<div class="row mb-2 parent-row" id="row-' + msg.id + '" data-id="' + msg.id + '">';
+            str += '<div class="col-md-6">';
+
+            str += '<div>From:  <span class="from">' + msg.old_slug + '</span></div>';
+            str += '<div>To: <span class="to">' + msg.slug + '</span></div>';
+
+            str += '</div>';
+            str += '<div class="col-md-6">';
+            str += '<button type="button" class="btn btn-sm btn-primary mr-2 editLink" data-toggle="modal" data-target="#editModal">';
             str += 'Edit';
             str += '</button>';
-            str += '<button type="button" class="btn btn-sm btn-danger deleteLink">';
-            str += 'Delete';
+            str += '<button type="button" data-status="1" class="btn btn-sm btn-danger mr-2 statusLink">';
+            str += 'Change status';
             str += '</button>';
-            str += '</li>';
+            str += '<button type="button" class="btn btn-sm btn-danger  deleteLink">Delete</button>';
+            str += '</div>';
+            str += '</div>';
+
 
             $('#links-list').append( str );
 
             setTimeout(function(){
 
-                $('#exampleModal').modal('hide');
+                $('#createModal').modal('hide');
 
                 $(target)
                     .find("input,textarea,select")
@@ -76,8 +91,9 @@ $(document).on('submit', 'form#linkForm', function(e){
                     .prop("checked", "")
                     .end();
 
-                $( 'form#linkForm #form-success' ).removeClass( 'alert' );
-                $( 'form#linkForm #form-success' ).html( '' );
+                $( '#createModal form#linkForm #form-success' ).removeClass( 'alert' );
+                $( '#createModal form#linkForm #form-success' ).html( '' );
+                $( '#createModal form#linkForm #id' ).val( 0 );
 
             }, 600);
         },
@@ -89,12 +105,122 @@ $(document).on('submit', 'form#linkForm', function(e){
                 errorsHtml += '<li>'+ value[0] + '</li>';
             });
             errorsHtml += '</ul></div>';
-            $( 'form#linkForm #form-errors' ).html( errorsHtml );
+            $( '#createModal form#linkForm #form-errors' ).html( errorsHtml );
         }
     });
    return false;
 });
 
+$(document).on('submit', '#editModal form#linkForm', function(e){
+    var $t = $(this),
+        target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
+
+    var id = $('#editModal form#linkForm #id').val();
+
+    $.ajax({
+        type: "PUT",
+        url: "/links/" + id,
+        data: $('#editModal form#linkForm').serialize(),
+        success: function(msg){
+
+            $( '#editModal form#linkForm #form-errors' ).html( '' );
+            $( '#editModal form#linkForm #form-success' ).addClass( 'alert' );
+            $( '#editModal form#linkForm #form-success' ).html( 'Redirect link was saved!' );
+
+            $('#row-' + msg.id).find('.from').html(msg.old_slug);
+            $('#row-' + msg.id).find('.to').html(msg.slug);
+
+            setTimeout(function(){
+
+                $('#editModal').modal('hide');
+
+                $(target)
+                    .find("input,textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+
+                $( '#editModal form#linkForm #form-success' ).removeClass( 'alert' );
+                $( '#editModal form#linkForm #form-success' ).html( '' );
+                $( '#editModal form#linkForm #id' ).val( 0 );
+
+            }, 600);
+        },
+        error: function(data){
+            var errors = data.responseJSON;
+            console.log(errors);
+            errorsHtml = '<div class="alert alert-danger"><ul>';
+            $.each( errors.errors, function( key, value ) {
+                errorsHtml += '<li>'+ value[0] + '</li>';
+            });
+            errorsHtml += '</ul></div>';
+            $( '#editModal form#linkForm #form-errors' ).html( errorsHtml );
+        }
+    });
+    return false;
+});
+
+
+$(document).on('click', '.statusLink', function(){
+    var addClass = '';
+    var removeClass = '';
+    var el = $(this);
+    var id = $(this).parents('.parent-row').data('id');
+    var status = parseInt($(this).data('status'));
+    status = (status == 1 ? 0 : 1);
+    $.ajax({
+        type: "PATCH",
+        url: "/links/" + id,
+        data: {
+            status: status
+        },
+        success: function(msg){
+            el.data('status', msg.status);
+            if( msg.status == 1 ){
+                addClass = 'btn-danger';
+                removeClass = 'btn-primary';
+            }else{
+                addClass = 'btn-primary';
+                removeClass = 'btn-danger';
+            }
+            el.removeClass(removeClass);
+            el.addClass(addClass);
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
+
+});
+
 $(document).on('click', '.deleteLink', function(){
-    console.log($(this).parent('li').data('id'));
-})
+    var el = $(this);
+    var id = $(this).parents('.parent-row').data('id');
+
+    $.ajax({
+        type: "DELETE",
+        url: "/links/" + id,
+        data: {
+            status: status
+        },
+        success: function(msg){
+            el.parents('.parent-row').remove();
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
+
+});
+
+$(document).on('click', '.editLink', function(){
+    var el = $(this);
+    var parent = $(this).parents('.parent-row');
+    var id = parent.data('id');
+    $( '#editModal form#linkForm #id' ).val( id );
+    $('#editModal #link').val(parent.find('.from').html());
+    $('#editModal #slug').val(parent.find('.to').html());
+
+});

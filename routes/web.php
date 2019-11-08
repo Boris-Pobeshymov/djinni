@@ -17,15 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::group(['middleware' => 'auth'], function () {
-//
-//    Route::post('addLink', 'redirectLinksController@addLink');
-//
-//});
-
-
-use Http\Controllers\RedirectLinksController;
 Route::group(['middleware' => 'auth'], function () {
+
     Route::resource('/links', 'RedirectLinksController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);

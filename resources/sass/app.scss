@@ -58,9 +58,13 @@
 .m-b-md {
   margin-bottom: 30px;
 }
-
-ul#links-list li{
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #474747;
+#links-list .row:first-child{
+  border-top: 1px solid #e8e8e8;
+}
+#links-list .row{
+  padding: 10px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+#links-list .row:last-child{
+  border-bottom: none;
 }

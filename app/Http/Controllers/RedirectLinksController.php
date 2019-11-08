@@ -40,14 +40,4 @@ class RedirectLinksController extends Controller
         if($redirect->delete()) return response(null, 204);
     }
 
-    public function addLink(Request $request){
-        $user = Auth::user()->id;
-
-
-
-        return response()->json([
-            'response' => 'success',
-            'data' => $user
-        ]);
-    }
 }
