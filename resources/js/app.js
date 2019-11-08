@@ -73,6 +73,8 @@ $(document).on('submit', '#createModal form#linkForm', function(e){
             str += 'Change status';
             str += '</button>';
             str += '<button type="button" class="btn btn-sm btn-danger  deleteLink">Delete</button>';
+            str += '<button type="button" class="btn btn-sm btn-primary mr-2  getLinkStatistic">Get statistic</button>';
+            str += '<span class="count_redirects"></span>';
             str += '</div>';
             str += '</div>';
 
@@ -223,4 +225,23 @@ $(document).on('click', '.editLink', function(){
     $('#editModal #link').val(parent.find('.from').html());
     $('#editModal #slug').val(parent.find('.to').html());
 
+});
+
+$(document).on('click', '.getLinkStatistic', function(){
+    var el = $(this);
+    var parent = $(this).parents('.parent-row');
+    var id = parent.data('id');
+    $.ajax({
+        type: "GET",
+        url: "/links/statistic/" + id,
+        data: {
+            status: status
+        },
+        success: function(msg){
+            parent.find('.count_redirects').html('All redirects: ' + msg);
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
 });

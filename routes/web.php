@@ -18,7 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-
+    Route::get('/links/statistic/{id}', 'RedirectLinksController@getStatistic');
     Route::resource('/links', 'RedirectLinksController')->only([
         'index', 'show', 'store', 'update', 'destroy'
     ]);

@@ -70,4 +70,9 @@ class RedirectLinksController extends Controller
         }
     }
 
+    public function getStatistic(RedirectLinksRequest $request, $id){
+        $all = Statistic::where('redirect_id', $id)->get();
+        return response(count($all), 200);
+    }
+
 }

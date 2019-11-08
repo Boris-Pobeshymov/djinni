@@ -33,6 +33,10 @@
                                                 <button type="button" class="btn btn-sm btn-primary mr-2 editLink" data-toggle="modal" data-target="#editModal">Edit</button>
                                                 <button type="button" class="btn btn-sm {{ $class }} mr-2  statusLink" data-status="{{ $link->status }}">Change status</button>
                                                 <button type="button" class="btn btn-sm btn-danger mr-2  deleteLink">Delete</button>
+
+                                                <button type="button" class="btn btn-sm btn-primary mr-2  getLinkStatistic">Get statistic</button>
+
+                                                <span class="count_redirects"></span>
                                             </div>
                                         </div>
                                     @endforeach
