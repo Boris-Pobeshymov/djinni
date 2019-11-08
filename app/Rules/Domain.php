@@ -26,7 +26,7 @@ class Domain implements Rule
     public function passes($attribute, $value)
     {
         return preg_match(
-            "/^(?!:\/\/)(?=.{1,255}$)((.{1,63}\.){1,127}(?![0-9]*$)[a-z0-9-]+\.?)$/i", $value
+            "/^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/", $value
         );
     }
 
@@ -38,6 +38,6 @@ class Domain implements Rule
     public function message()
     {
         return 'The :attribute must be a valid domain without an http 
-            protocol e.g. google.com, www.google.com';
+            protocol e.g. http://google.com, https://www.google.com';
     }
 }

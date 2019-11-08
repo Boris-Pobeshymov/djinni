@@ -6,6 +6,7 @@ use App\Http\Requests\RedirectLinksRequest;
 use Illuminate\Support\Facades\Auth;
 
 use App\RedirectLinks;
+use App\Statistic;
 
 class RedirectLinksController extends Controller
 {
@@ -45,7 +46,25 @@ class RedirectLinksController extends Controller
                                     ->where('status', 1)
                                     ->first();
         if($redirect){
-            echo $redirect->old_slug;
+
+            $ip = $request->ip();
+            $position = \Stevebauman\Location\Facades\Location::get($ip);
+
+            $statistic = new Statistic;
+
+            $statistic->redirect_id = $redirect->id;
+            $statistic->headers = json_encode($request->headers->all());
+            $statistic->user_agent = $request->header('user-agent');
+            $statistic->ip = $ip;
+            if($position) {
+                $statistic->country = $position->countryName;
+                $statistic->region = $position->regionName;
+                $statistic->city = $position->cityName;
+            }
+            $statistic->save();
+
+            return redirect($redirect->old_slug);
+
         }else{
             abort(404);
         }
