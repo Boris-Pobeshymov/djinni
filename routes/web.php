@@ -25,3 +25,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 });
+
+
+Route::any( '(.*)', function( $page ){
+    dd($page);
+});
+
+Route::get('/{any}', 'RedirectLinksController@checkRedirect')->where('any', '.*');

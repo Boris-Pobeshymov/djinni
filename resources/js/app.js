@@ -61,8 +61,8 @@ $(document).on('submit', '#createModal form#linkForm', function(e){
             str += '<div class="row mb-2 parent-row" id="row-' + msg.id + '" data-id="' + msg.id + '">';
             str += '<div class="col-md-6">';
 
-            str += '<div>From:  <span class="from">' + msg.old_slug + '</span></div>';
-            str += '<div>To: <span class="to">' + msg.slug + '</span></div>';
+            str += '<div>From:  <span class="from">' + msg.slug + '</span></div>';
+            str += '<div>To: <span class="to">' + msg.old_slug + '</span></div>';
 
             str += '</div>';
             str += '<div class="col-md-6">';
@@ -127,8 +127,8 @@ $(document).on('submit', '#editModal form#linkForm', function(e){
             $( '#editModal form#linkForm #form-success' ).addClass( 'alert' );
             $( '#editModal form#linkForm #form-success' ).html( 'Redirect link was saved!' );
 
-            $('#row-' + msg.id).find('.from').html(msg.old_slug);
-            $('#row-' + msg.id).find('.to').html(msg.slug);
+            $('#row-' + msg.id).find('.from').html(msg.slug);
+            $('#row-' + msg.id).find('.to').html(msg.old_slug);
 
             setTimeout(function(){
 

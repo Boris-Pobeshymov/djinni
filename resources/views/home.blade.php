@@ -26,8 +26,8 @@
                                         @endphp
                                         <div class="row mb-2 parent-row" id="row-{{ $link->id }}" data-id="{{ $link->id }}">
                                             <div class="col-md-6">
-                                                <div>From: <span class="from">{{ $link->old_slug }}</span></div>
-                                                <div>To: <span class="to">{{ $link->slug }}</span></div>
+                                                <div>From: <span class="to">{{ $link->slug }}</span></div>
+                                                <div>To: <span class="from">{{ $link->old_slug }}</span></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <button type="button" class="btn btn-sm btn-primary mr-2 editLink" data-toggle="modal" data-target="#editModal">Edit</button>

@@ -49394,8 +49394,8 @@ $(document).on('submit', '#createModal form#linkForm', function (e) {
       var str = '';
       str += '<div class="row mb-2 parent-row" id="row-' + msg.id + '" data-id="' + msg.id + '">';
       str += '<div class="col-md-6">';
-      str += '<div>From:  <span class="from">' + msg.old_slug + '</span></div>';
-      str += '<div>To: <span class="to">' + msg.slug + '</span></div>';
+      str += '<div>From:  <span class="from">' + msg.slug + '</span></div>';
+      str += '<div>To: <span class="to">' + msg.old_slug + '</span></div>';
       str += '</div>';
       str += '<div class="col-md-6">';
       str += '<button type="button" class="btn btn-sm btn-primary mr-2 editLink" data-toggle="modal" data-target="#editModal">';
@@ -49441,8 +49441,8 @@ $(document).on('submit', '#editModal form#linkForm', function (e) {
       $('#editModal form#linkForm #form-errors').html('');
       $('#editModal form#linkForm #form-success').addClass('alert');
       $('#editModal form#linkForm #form-success').html('Redirect link was saved!');
-      $('#row-' + msg.id).find('.from').html(msg.old_slug);
-      $('#row-' + msg.id).find('.to').html(msg.slug);
+      $('#row-' + msg.id).find('.from').html(msg.slug);
+      $('#row-' + msg.id).find('.to').html(msg.old_slug);
       setTimeout(function () {
         $('#editModal').modal('hide');
         $(target).find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();

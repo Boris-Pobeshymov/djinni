@@ -40,4 +40,15 @@ class RedirectLinksController extends Controller
         if($redirect->delete()) return response(null, 204);
     }
 
+    public function checkRedirect(RedirectLinksRequest $request, $any){
+        $redirect = RedirectLinks::where('slug', $any)
+                                    ->where('status', 1)
+                                    ->first();
+        if($redirect){
+            echo $redirect->old_slug;
+        }else{
+            abort(404);
+        }
+    }
+
 }

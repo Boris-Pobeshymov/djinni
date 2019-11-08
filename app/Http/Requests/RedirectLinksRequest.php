@@ -38,6 +38,8 @@ class RedirectLinksRequest extends FormRequest
 
         switch ($this->getMethod())
         {
+            case 'GET':
+                return [];
             case 'POST':
                 return $rules;
             case 'PUT':
@@ -71,9 +73,12 @@ class RedirectLinksRequest extends FormRequest
             case 'PATCH':
             case 'DELETE':
                 $data['id'] = $this->route('link');
+            case 'POST':
+            case 'PUT':
+            case 'PATCH':
+            case 'DELETE':
+                $data['user_id'] = Auth::user()->id;
         }
-
-        $data['user_id'] = Auth::user()->id;
         return $data;
     }
 
