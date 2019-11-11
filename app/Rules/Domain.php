@@ -37,7 +37,7 @@ class Domain implements Rule
      */
     public function message()
     {
-        return 'The :attribute must be a valid domain without an http 
+        return 'The :attribute must be a valid domain with http 
             protocol e.g. http://google.com, https://www.google.com';
     }
 }
